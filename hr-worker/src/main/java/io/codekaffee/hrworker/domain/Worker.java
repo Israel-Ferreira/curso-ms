@@ -1,0 +1,67 @@
+package io.codekaffee.hrworker.domain;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import javax.persistence.*;
+import java.io.Serializable;
+
+@Entity
+@Table(name = "tb_workers")
+public class Worker implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String name;
+
+    @Column(name = "daily_Income")
+    private Double dailyIncome;
+
+    public Worker(){
+        super();
+    }
+
+    public Worker(String name, Double dailyIncome) {
+        this.name = name;
+        this.dailyIncome = dailyIncome;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+
+    public Double getDailyIncome() {
+        return dailyIncome;
+    }
+
+    public void setDailyIncome(Double dailyIncome) {
+        this.dailyIncome = dailyIncome;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Worker worker = (Worker) o;
+
+        return id != null ? id.equals(worker.id) : worker.id == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
+    }
+}
