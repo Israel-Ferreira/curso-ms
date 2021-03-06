@@ -1,7 +1,5 @@
 package io.codekaffee.hrworker.domain;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import javax.persistence.*;
 import java.io.Serializable;
 
