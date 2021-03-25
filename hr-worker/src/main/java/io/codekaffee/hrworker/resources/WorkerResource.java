@@ -7,6 +7,8 @@ import io.codekaffee.hrworker.repositories.WorkrRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +18,7 @@ import java.net.URI;
 import java.util.List;
 
 
+@RefreshScope
 @RestController
 @RequestMapping(value = "/workers")
 public class WorkerResource {
@@ -28,11 +31,22 @@ public class WorkerResource {
     @Autowired
     private Environment env;
 
+    @Value("${test.config}")
+    private String testConfig;
+
     @GetMapping
     public ResponseEntity<List<Worker>> getWorkers(){
         var workers = workrRepository.findAll();
         return ResponseEntity.ok(workers);
     }
+
+
+    @GetMapping("/configs")
+    public ResponseEntity<Void> getConfigs(){
+        log.info("CONFIG= " + testConfig );
+        return ResponseEntity.noContent().build();
+    }
+
 
     @PostMapping
     public ResponseEntity<?> createWorker(@RequestBody Worker worker){
