@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.codekaffee.hruser.dto.UserDTO;
 import io.codekaffee.hruser.exceptions.UserNotFoundException;
 import io.codekaffee.hruser.models.User;
 import io.codekaffee.hruser.repositories.UserRepository;
@@ -27,13 +28,16 @@ public class UserController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<User> searchByEmail(@RequestParam String email){
+    public ResponseEntity<UserDTO> searchByEmail(@RequestParam String email){
         User user = this.userRepository.findByEmail(email)
             .orElseThrow(UserNotFoundException::new);
 
 
+        UserDTO userDTO = new UserDTO(user);
 
-        return ResponseEntity.ok(user);
+
+
+        return ResponseEntity.ok(userDTO);
     }
 
 }
