@@ -46,9 +46,14 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
+
+        var secret = "{bcrypt}" + passwordEnconder.encode("myappsecret123");
+
+        System.out.println(secret);
+        
         clients.inMemory()
             .withClient("myappname123")
-            .secret("{bcrypt}" + passwordEnconder.encode("myappsecret123"))
+            .secret(secret)
             .scopes("read", "write")
             .authorizedGrantTypes("password")
             .accessTokenValiditySeconds(86400);
