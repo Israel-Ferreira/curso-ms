@@ -31,8 +31,6 @@ public class WorkerResource {
     @Autowired
     private Environment env;
 
-    @Value("${test.config}")
-    private String testConfig;
 
     @GetMapping
     public ResponseEntity<List<Worker>> getWorkers(){
@@ -43,7 +41,6 @@ public class WorkerResource {
 
     @GetMapping("/configs")
     public ResponseEntity<Void> getConfigs(){
-        log.info("CONFIG= " + testConfig );
         return ResponseEntity.noContent().build();
     }
 
@@ -52,8 +49,7 @@ public class WorkerResource {
     public ResponseEntity<?> createWorker(@RequestBody Worker worker){
         Worker savedWorker =  workrRepository.save(worker);
 
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/" + savedWorker.getId())
-                .build().toUri();
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/" + savedWorker.getId()).build().toUri();
 
         return ResponseEntity.created(uri).body(savedWorker);
     }
