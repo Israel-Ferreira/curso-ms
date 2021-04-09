@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import io.codekaffee.hroauth.clients.UserFeignClient;
@@ -19,6 +20,10 @@ public class UserService implements UserDetailsService {
     
     @Autowired
     private UserFeignClient userFeignClient;
+
+
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
 
 
     public User findUserByEmail(String email){
@@ -47,6 +52,12 @@ public class UserService implements UserDetailsService {
             log.error("Email not found: " + username);
             throw new UsernameNotFoundException("Email not found");
         }
+
+        
+        boolean pwdMatches = passwordEncoder.matches("teste123", userResp.getBody().getPassword());
+
+        System.out.println(pwdMatches);
+        System.out.println(userResp.getBody().getPassword());
 
 
         log.info("Email Found: " + userResp.getBody().getEmail());

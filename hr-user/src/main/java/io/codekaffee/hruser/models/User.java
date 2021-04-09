@@ -13,8 +13,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "tb_user")
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -32,7 +34,7 @@ public class User implements Serializable {
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-        name = "user_roles", 
+        name = "tb_user_role", 
         joinColumns = @JoinColumn(name = "user_id"), 
         inverseJoinColumns = @JoinColumn(name = "role_id")
     )

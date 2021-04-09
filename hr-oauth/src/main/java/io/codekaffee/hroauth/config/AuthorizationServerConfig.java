@@ -6,15 +6,11 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 
-
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
-
 
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 
-
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
-
 
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
@@ -25,7 +21,7 @@ import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
 
     @Autowired
-    private BCryptPasswordEncoder passwordEnconder;
+    private BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
     private JwtAccessTokenConverter tokenConverter;
@@ -33,12 +29,9 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Autowired
     private JwtTokenStore tokenStore;
 
-
     @Autowired
     private AuthenticationManager authManager;
 
-    
-    
     @Override
     public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
         security.tokenKeyAccess("permitAll()").checkTokenAccess("isAuthenticated()");
@@ -46,16 +39,9 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-
-        var secret = "{bcrypt}" + passwordEnconder.encode("myappsecret123");
-
-        System.out.println(secret);
-        
-        clients.inMemory()
-            .withClient("myappname123")
-            .secret(secret)
-            .scopes("read", "write")
-            .authorizedGrantTypes("password")
+        clients.inMemory().withClient("myappname123")
+            .secret(passwordEncoder.encode("myappsecret123"))
+            .scopes("read", "write").authorizedGrantTypes("password")
             .accessTokenValiditySeconds(86400);
     }
 
