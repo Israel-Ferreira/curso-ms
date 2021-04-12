@@ -7,7 +7,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
-import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
 
@@ -18,8 +17,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
     @Autowired
     private JwtTokenStore tokenStore;
 
-    @Autowired
-    private JwtAccessTokenConverter tokenConverter;
+
 
     private static final String[] PUBLIC = {
         "/hr-oauth/oauth/token"
@@ -33,18 +31,19 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
     private static final String[] ADMIN_ROUTES = {
         "/hr-payroll/**",
         "/hr-user/**",
-        "/hr-worker/**"
+        "/hr-worker/**",
+        "/actuator/**",
+        "/hr-worker/actuator/**",
+        "/hr-oauth/actuator/**"
     };
     
     @Override
     public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
-        // TODO Auto-generated method stub
         resources.tokenStore(tokenStore);
     }
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
-        // TODO Auto-generated method stub
         http.authorizeRequests()
             .antMatchers(PUBLIC).permitAll()
             .antMatchers(HttpMethod.GET, OPERATOR_ROUTES).hasAnyRole("OPERATOR","ADMIN")
