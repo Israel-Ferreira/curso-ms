@@ -23,7 +23,6 @@ public class HrOauthApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		// TODO Auto-generated method stub
 		String encoded = passwordEncoder.encode("myappsecret123");
 		System.out.println(encoded);
 	}
