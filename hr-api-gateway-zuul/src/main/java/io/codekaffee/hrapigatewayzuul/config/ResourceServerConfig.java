@@ -44,8 +44,10 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
         "/hr-worker/**",
         "/actuator/**",
         "/hr-worker/actuator/**",
-        "/hr-oauth/actuator/**"
+        "/hr-oauth/actuator/**",
+        "/hr-user/actuator/**"
     };
+    
     
     @Override
     public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
