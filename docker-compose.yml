@@ -1,0 +1,121 @@
+version: '3'
+
+services: 
+  hr-worker-db:
+    container_name: hr-worker-pg12-db
+    image: postgres:12-alpine
+    ports: 
+      - 5477:5432
+
+    networks: 
+      - hr-net-compose 
+
+    restart: always
+
+    environment:
+      - POSTGRES_PASSWORD=1234567 
+      - POSTGRES_DB=db_hr_worker
+
+
+  hr-user-db:
+    container_name: hr-user-pg12-db 
+    image: postgres:12-alpine 
+    ports: 
+      - 5478:5432
+
+    restart: always
+
+    networks: 
+      - hr-net-compose
+    
+    environment: 
+      - POSTGRES_PASSWORD=1234567
+      - POSTGRES_DB=db_hr_user
+
+
+  hr-config-server:
+    build: ./hr-config-server
+    ports: 
+      - 8888:8888
+
+    networks: 
+      - hr-net-compose
+  
+  hr-eureka-server:
+    container_name: hr-eureka-server
+    build: ./hr-eureka-server
+    ports: 
+      - 8761:8761
+
+    networks: 
+      - hr-net-compose
+
+    
+  hr-api-gateway:
+    container_name: hr-api-gateway-zuul
+    build: ./hr-api-gateway
+    ports: 
+      - 8765:8765
+
+    networks: 
+      - hr-net-compose
+
+    depends_on: 
+      - hr-config-server
+      - hr-eureka-server 
+
+  hr-worker:
+    container_name: hr-worker-ms
+    build: ./hr-worker
+    depends_on: 
+      - hr-config-server
+      - hr-worker-db
+      - hr-eureka-server 
+
+    networks: 
+      - hr-net-compose
+
+
+  hr-payroll:
+    container_name: hr-payroll-ms 
+    build: ./hr-payroll
+
+    depends_on: 
+      - hr-eureka-server
+    
+    networks: 
+      - hr-net-compose
+
+  
+  hr-user:
+    container_name: hr-user-ms
+    build: ./hr-user 
+
+    depends_on: 
+      - hr-config-server
+      - hr-user-db
+      - hr-eureka-server 
+    
+    networks: 
+      - hr-net-compose
+
+
+  hr-oauth:
+    container_name: hr-oauth-ms
+    build: ./hr-oauth
+
+    depends_on: 
+      - hr-config-server
+      - hr-eureka-server 
+
+    networks:
+      - hr-net-compose
+
+
+networks: 
+  hr-net-compose:
+
+
+
+
+
